@@ -1,19 +1,19 @@
 "use strict";
 
 
-let homePage = `
-	<section>
-		<h1>Welcome to sendit hompage</h1>
-	</section>`
+import homePage from './views/pages/home.js' 
+import dashboardPage from './views/pages/dashboard.js' 
+import profilePage from './views/pages/profile.js' 
+import signupPage from './views/pages/signup.js' 
+import loginPage from './views/pages/login.js' 
 
-let aboutPage = `
-	<section>
-		<h1>About Us</h1>
-	</section>`
 
 const routes = {
 	'/': homePage,
-	'/about': aboutPage,
+	'/dashboard': dashboardPage,
+	'/profile': profilePage,
+	'/signup': signupPage,
+	'/login': loginPage,
 };
 
 
