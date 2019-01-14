@@ -1,4 +1,6 @@
-let dashboardPage = `
+let dashboardPage =  {
+	render: async () => {
+		return `
 	<section class="main">
 		<div class="container">
 			<h1>Welcome to your Dashboard.</h1>
@@ -94,6 +96,12 @@ let dashboardPage = `
 				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
 			</div>
 		</div>
-	</section>`
-	
+	</section>`},
+
+	after_rendering: async () => {
+		console.log("dashboard");
+	}
+}
+
+
 export default dashboardPage;

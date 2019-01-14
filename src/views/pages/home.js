@@ -1,4 +1,6 @@
-let homePage = `
+let homePage = {
+	render: async () => {
+		return `
 	<section id="intro">
 		<div class="overlay">
 			<div class="container">
@@ -50,6 +52,11 @@ let homePage = `
 				</p>
 			</div>
 		</div>
-	</section>`
+	</section>`},
+
+	after_rendering: async () => {
+		console.log("home");
+	}
+}
 
 export default homePage;

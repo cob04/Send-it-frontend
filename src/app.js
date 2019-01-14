@@ -17,20 +17,37 @@ const routes = {
 };
 
 
-let contentDiv = document.getElementById('page_content');
-contentDiv.innerHTML = routes[window.location.pathname];
+let parseUrl = () => {
 
-// using History API
-let onNavItemClick = (pathName) => {
-	window.history.pushState(
-		{},
-		pathName,
-		windown.location.origin + pathName
-		);
+	let url = location.hash.slice(1).toLowerCase() || '/';
+	let request_string = url.split("/");
+	let request = {
+		resource: null,
+		id: null,
+		verb: null
+	}
+	request.resource = request_string[1];
+	request.id = request_string[2];
+	request.verb = request_string[3];
 
-	contentDiv.innerHTML = routes[pathName];
+	return request;
 }
 
-window.onpopstate = () => {
-	contentDiv.innerHtml = routes[window.location.pathname];
+const router = async () => {
+
+	let contentDiv = document.getElementById('page_content');
+	let request = parseUrl();
+
+	let parsedURL = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '');
+	console.log(parsedURL);
+
+	let page = routes[parsedURL];
+	contentDiv.innerHTML = await page.render();
+	await page.after_rendering();
 }
+
+// On hash change
+window.addEventListener('hashchange', router);
+
+// On page load
+window.addEventListener('load', router);

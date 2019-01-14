@@ -1,4 +1,6 @@
-let loginPage = `
+let loginPage =  {
+	render: async () => {
+		return `
 	<section class="main">
 		<div class="container">
 			<form class="account-form">
@@ -14,8 +16,13 @@ let loginPage = `
 				</div>
 				<button type="submit" class="btn-action btn-block">Log in</button>
 			</form>
-			<p class="text-center">Don't have an account? <a href="login.html">Log in</a></p>
+			<p class="text-center">Don't have an account? <a href="signup">Sign up</a></p>
 		</div>
-	</section>`
+	</section>`},
+
+	after_rendering: async () => {
+		console.log("login");
+	}
+}
 
 export default loginPage;

@@ -1,4 +1,7 @@
-let profilePage = `
+let profilePage = { 
+
+	render: async () => { 
+	return `
 	<section class="main">
 		<div class="container">
 			<h1>Welcome [username]</h1>
@@ -58,5 +61,10 @@ let profilePage = `
 			</div>
 		</div>
 	</section>`
+	},
 
+	after_rendering: async () => {
+		console.log("profile");
+	}
+}
 export default profilePage;
