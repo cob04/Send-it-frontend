@@ -16,7 +16,7 @@ let loginPage =  {
 				</div>
 				<button type="submit" class="btn-action btn-block">Log in</button>
 			</form>
-			<p class="text-center">Don't have an account? <a href="signup">Sign up</a></p>
+			<p class="text-center">Don't have an account? <a href="#/signup">Sign up</a></p>
 		</div>
 	</section>`},
 
