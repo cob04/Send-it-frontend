@@ -5,103 +5,156 @@ let dashboardPage =  {
 		<div class="container">
 			<h1>Welcome to your Dashboard.</h1>
 			<p>From here you can create new orders or edit existing ones</p>
-			<a href="create-order.html"><button class="btn-green">Create new Order</button></a>
-
+			<button id="orderModalBtn" class="btn-green">Create new Order</button>
 		</div>
 	</section>
 	<section class="main-alt">
-		<div class="container">
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1534 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Mombasa, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1654 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nyeri, E34 street</p>
-				<p>To: Eldoret, 77 rd</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1083 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, F24 st</p>
-				<p>To: Nairobi, D23 rd</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
-			<div class="thumbnail">
-				<p>ID: #1234 <a href="parcel-details.html"><button class="btn-blue btn-sm">More details</button></a></p>
-				<p>From: Nairobi, 234 lane</p>
-				<p>To: Nairobi, 223 drive</p>
-				<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-				<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
-			</div>
+		<div id="parcels" class="container">
 		</div>
-	</section>`},
+	</section>
+	<div id="orderModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2>Create a new Order</h2>
+				<hr/>
+				<div class="form-group">
+					<label>Sender</label>
+					<input id="sender" type="text" placeholder="Enter sender's name">
+				</div>
+				<div class="form-group">
+					<label>Recipient</label>
+					<input id="recipient" type="text" placeholder="Enter recipient's name">
+				</div>
+				<div class="form-group">
+					<label>Pickup</label>
+					<input id="pickup" type="text" placeholder="Pickup location">
+				</div>
+				<div class="form-group">
+					<label>Destination</label>
+					<input id="destination" type="text" placeholder="Destination location">
+				</div>
+				<div class="form-group">
+					<label>Weight</label>
+					<input id="weight" type="text" placeholder="Parcel weight">
+				</div>
+				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
+			</form>
+  		</div>
+	</div> `},
 
 	after_rendering: async () => {
-		console.log("dashboard");
+
+		const fetchOrders = () => {
+			let url = "http://127.0.0.1:5000/api/v3/parcels";
+
+			let token = localStorage.getItem("token");
+
+			fetch(url, {
+				method: 'GET',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.json())
+			.then(response => {
+				if (response.message === "Success"){
+					let parcel_orders = response.parcel_orders;
+					parcelOrders(parcel_orders);
+				} else {
+					console.log(response);
+					alert(response.msg);
+				}
+			})
+			.catch(error => {
+				console.log(response);
+			});
+		}
+
+		let parcelOrders = (parcel_orders) => {
+			parcel_orders.forEach(parcel => {
+				console.log("running");
+				let items = document.createElement("div");
+				items.innerHTML = `
+					<div class="thumbnail">
+						<p>ID: ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
+						<p>From: ${parcel.pickup}</p>
+						<p>To: ${parcel.destination}</p>
+						<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
+						<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
+					</div>`
+				document.getElementById('parcels').appendChild(items);
+			});
+		}
+
+		fetchOrders();
+
+		let modal = document.getElementById('orderModal');
+		let btn = document.getElementById("orderModalBtn");
+		let span = document.getElementsByClassName("close")[0];
+
+		btn.onclick = function() {
+			modal.style.display = "block";
+		}
+
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+
+		const createOrder = () => {
+			let sender = document.getElementById("sender").value;
+			let recipient = document.getElementById("recipient").value;
+			let pickup = document.getElementById("pickup").value;
+			let destination = document.getElementById("destination").value;
+			let weight = document.getElementById("weight").value;
+
+			let new_order_data = {
+				sender: sender,
+				recipient: recipient,
+				pickup: pickup,
+				destination: destination,
+				weight: weight
+			}
+
+			const url = "http://127.0.0.1:5000/api/v3/parcels"
+
+			let token = localStorage.getItem("token");
+
+			fetch(url, {
+				method: 'POST',
+				body: JSON.stringify(new_order_data),
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.json())
+			.then(response => {
+				if (response.message === "Success"){
+					window.location.href = "/#/dashboard";
+					modal.style.display = "none";
+				} else {
+					console.log(response.message);
+				}
+			})
+			.catch(error => {
+				console.log(response.message);
+			});
+		}
+
+		let orderBtn = document.getElementById("createOrderBtn");
+
+		orderBtn.onclick = function(event){
+			createOrder();
+		}
 	}
 }
-
 
 export default dashboardPage;
