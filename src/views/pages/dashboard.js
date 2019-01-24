@@ -81,6 +81,7 @@ let dashboardPage =  {
 						<p>ID: ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
 						<p>From: ${parcel.pickup}</p>
 						<p>To: ${parcel.destination}</p>
+						<p>Status: ${parcel.status}</p>
 						<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
 						<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
 					</div>`
