@@ -140,7 +140,7 @@ let dashboardPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					window.location.href = "/#/dashboard";
+					window.location.href = "#/dashboard";
 					modal.style.display = "none";
 				} else {
 					console.log(response.message);

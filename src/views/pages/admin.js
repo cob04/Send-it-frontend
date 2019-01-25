@@ -40,7 +40,7 @@ let adminPage =  {
 				</div>
 				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
 			</form>
-  		</div>
+  		</div>163447563
 	</div> `},
 
 	after_rendering: async () => {
@@ -78,14 +78,17 @@ let adminPage =  {
 				let items = document.createElement("div");
 				items.innerHTML = `
 					<div class="thumbnail">
-						<p><span>ID:</span> ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
+						<p>
+							<span>ID:</span> ${parcel.id} <a href="/#/parcels/${parcel.id}">
+							<button class="btn-blue btn-sm">More details</button></a>
+						</p>
 						<p><span>Sender:</span> ${parcel.sender}</p>
 						<p><span>Recipient:</span> ${parcel.recipient}</p>
 						<p><span>From:</span> ${parcel.pickup}</p>
 						<p><span>To:</span> ${parcel.destination}</p>
 						<p><span>Status:</span> ${parcel.status}</p>
-						<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-						<a href="#"><button class="btn-green btn-sm">Alter destination</button></a>
+						<button id=""class="btn-action btn-sm">Cancel</button>
+						<button class="btn-green btn-sm">Alter destination</button>
 					</div>`
 				document.getElementById('parcels').appendChild(items);
 			});
@@ -141,7 +144,7 @@ let adminPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					window.location.href = "/#/admin";
+					window.location.href = "#/admin";
 					modal.style.display = "none";
 				} else {
 					console.log(response.message);
