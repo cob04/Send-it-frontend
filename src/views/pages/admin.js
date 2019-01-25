@@ -87,8 +87,8 @@ let adminPage =  {
 						<p><span>From:</span> ${parcel.pickup}</p>
 						<p><span>To:</span> ${parcel.destination}</p>
 						<p><span>Status:</span> ${parcel.status}</p>
-						<button id=""class="btn-action btn-sm">Cancel</button>
-						<button class="btn-green btn-sm">Alter destination</button>
+						<button data-id="${parcel.id}"class="cancelBtn btn-action btn-sm">Cancel</button>
+						<button data-id="${parcel.id}" class="changeDestinationBtn btn-green btn-sm">Alter destination</button>
 					</div>`
 				document.getElementById('parcels').appendChild(items);
 			});
@@ -160,6 +160,23 @@ let adminPage =  {
 		orderBtn.onclick = function(event){
 			createOrder();
 		}
+
+		// Cancel and order
+		let cancelBtn = document.getElementsByClassName("cancelBtn");
+
+		cancelBtn.onclick = function(event){
+			console("Data ID: " + cancelBtn.dataset.id);
+		}
+
+
+        let cancel_buttons = document.getElementsByClassName('cancelBtn');
+
+        for(let i = 0; i < cancel_buttons.length; i++) {
+            let button = cancel_buttons[i];
+            button.onclick = function() {
+                alert('parcel order cancelled');
+            }
+        }
 	}
 }
 
