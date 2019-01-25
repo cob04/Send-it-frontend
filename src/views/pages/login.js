@@ -45,7 +45,7 @@ let loginPage =  {
 				if (response.message === "Success"){
 					alert("Youre logged in " + response.user.name + "!!!");
 					localStorage.setItem("token", response.access_token);
-					window.location.href = "/#/dashboard";
+					window.location.href = "#/dashboard";
 				} else {
 					alert(response.message);
 				}
