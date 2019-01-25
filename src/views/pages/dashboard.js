@@ -60,6 +60,7 @@ let dashboardPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
+					console.log(response);
 					let parcel_orders = response.parcel_orders;
 					parcelOrders(parcel_orders);
 				} else {
@@ -78,12 +79,12 @@ let dashboardPage =  {
 				let items = document.createElement("div");
 				items.innerHTML = `
 					<div class="thumbnail">
-						<p>ID: ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
-						<p>From: ${parcel.pickup}</p>
-						<p>To: ${parcel.destination}</p>
-						<p>Status: ${parcel.status}</p>
-						<a href="#"><button class="btn-action btn-sm">Cancel</button></a>
-						<a href="#"><button class="btn-green btn-sm">alter destination</button></a>
+						<p><span>ID:</span> ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
+						<p><span>Sender:</span> ${parcel.sender}</p>
+						<p><span>Recipient:</span> ${parcel.recipient}</p>
+						<p><span>From:</span> ${parcel.pickup}</p>
+						<p><span>To:</span> ${parcel.destination}</p>
+						<p><span>Status:</span> ${parcel.status}</p>
 					</div>`
 				document.getElementById('parcels').appendChild(items);
 			});

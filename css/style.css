@@ -284,6 +284,9 @@ hr {
 	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
 	margin: 10px;
 }
+.thumbnail span {
+	font-weight: 600;
+}
 .tab {
 	width: 100%;
 	padding: 15px;

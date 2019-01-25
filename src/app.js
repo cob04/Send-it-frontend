@@ -3,6 +3,7 @@
 
 import homePage from './views/pages/home.js' 
 import dashboardPage from './views/pages/dashboard.js' 
+import adminPage from './views/pages/admin.js'
 import profilePage from './views/pages/profile.js' 
 import signupPage from './views/pages/signup.js' 
 import loginPage from './views/pages/login.js' 
@@ -11,6 +12,7 @@ import loginPage from './views/pages/login.js'
 const routes = {
 	'/': homePage,
 	'/dashboard': dashboardPage,
+	'/admin': adminPage,
 	'/profile': profilePage,
 	'/signup': signupPage,
 	'/login': loginPage,
