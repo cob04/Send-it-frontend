@@ -43,7 +43,7 @@ let signupPage = {
 				password2: password2
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/auth/signup"
+			const url = "https://gin-bob.herokuapp.com/api/v3/auth/signup";
 
 			fetch(url, {
 				method: 'POST',

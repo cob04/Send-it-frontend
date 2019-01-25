@@ -7,6 +7,7 @@ let dashboardPage =  {
 			<p>From here you can create new orders or edit existing ones</p>
 			<button id="orderModalBtn" class="btn-green">Create new Order</button>
 		</div>
+
 	</section>
 	<section class="main-alt">
 		<div id="parcels" class="container">
@@ -46,7 +47,7 @@ let dashboardPage =  {
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "http://127.0.0.1:5000/api/v3/parcels";
+			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -125,7 +126,7 @@ let dashboardPage =  {
 				weight: weight
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/parcels"
+			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 

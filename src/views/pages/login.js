@@ -31,7 +31,7 @@ let loginPage =  {
 				password: password,
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/auth/login"
+			const url = "https://gin-bob.herokuapp.com/api/v3/auth/login";
 
 			fetch(url, {
 				method: 'POST',

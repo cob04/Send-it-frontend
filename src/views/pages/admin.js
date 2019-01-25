@@ -46,7 +46,7 @@ let adminPage =  {
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "http://127.0.0.1:5000/api/v3/parcels";
+			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -129,7 +129,7 @@ let adminPage =  {
 				weight: weight
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/parcels"
+			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
