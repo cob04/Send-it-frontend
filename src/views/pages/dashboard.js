@@ -47,7 +47,7 @@ let dashboardPage =  {
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			let url = "http://127.0.0.1:5000/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -86,6 +86,7 @@ let dashboardPage =  {
 						<p><span>From:</span> ${parcel.pickup}</p>
 						<p><span>To:</span> ${parcel.destination}</p>
 						<p><span>Status:</span> ${parcel.status}</p>
+						<button data-id="${parcel.id}" class="changeDestinationBtn btn-green btn-sm">Alter destination</button>
 					</div>`
 				document.getElementById('parcels').appendChild(items);
 			});
@@ -126,7 +127,7 @@ let dashboardPage =  {
 				weight: weight
 			}
 
-			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			const url = "http://127.0.0.1:5000/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 

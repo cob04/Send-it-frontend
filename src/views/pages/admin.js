@@ -40,13 +40,31 @@ let adminPage =  {
 				</div>
 				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
 			</form>
-  		</div>163447563
+  		</div>
+  	</div>
+  	<div id="editModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2>Change order status</h2>
+				<hr/>
+				<div class="form-group">
+					<label>Order Status</label>
+					<select id="sender" name="status">
+						<option value="Delivered">Delivered</option>
+						<option value="Not Delivered">No Delivered</option>
+						<option value="In transit">In transit</option>
+					</select>
+				</div>
+				<button id="editOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Save</button>
+			</form>
+  		</div>
 	</div> `},
 
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			let url = "http://127.0.0.1:5000/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -74,7 +92,6 @@ let adminPage =  {
 
 		let parcelOrders = (parcel_orders) => {
 			parcel_orders.forEach(parcel => {
-				console.log("running");
 				let items = document.createElement("div");
 				items.innerHTML = `
 					<div class="thumbnail">
@@ -87,15 +104,20 @@ let adminPage =  {
 						<p><span>From:</span> ${parcel.pickup}</p>
 						<p><span>To:</span> ${parcel.destination}</p>
 						<p><span>Status:</span> ${parcel.status}</p>
-						<button data-id="${parcel.id}"class="cancelBtn btn-action btn-sm">Cancel</button>
-						<button data-id="${parcel.id}" class="changeDestinationBtn btn-green btn-sm">Alter destination</button>
+						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-cancel"></i> Cancel</button>
+						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-pencil"></i> Edit</button>
 					</div>`
 				document.getElementById('parcels').appendChild(items);
 			});
+
+			cancelOrderHandler();
+			editOrderHandler();
+
 		}
 
 		fetchOrders();
 
+		// create order modal
 		let modal = document.getElementById('orderModal');
 		let btn = document.getElementById("orderModalBtn");
 		let span = document.getElementsByClassName("close")[0];
@@ -129,7 +151,7 @@ let adminPage =  {
 				weight: weight
 			}
 
-			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			const url = "http://127.0.0.1:5000/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -154,30 +176,71 @@ let adminPage =  {
 				console.log(response.message);
 			});
 		}
-
-		let orderBtn = document.getElementById("createOrderBtn");
-
-		orderBtn.onclick = function(event){
-			createOrder();
-		}
-
-		// Cancel and order
-		let cancelBtn = document.getElementsByClassName("cancelBtn");
-
-		cancelBtn.onclick = function(event){
-			console("Data ID: " + cancelBtn.dataset.id);
-		}
-
-
-        let cancel_buttons = document.getElementsByClassName('cancelBtn');
-
-        for(let i = 0; i < cancel_buttons.length; i++) {
-            let button = cancel_buttons[i];
-            button.onclick = function() {
-                alert('parcel order cancelled');
-            }
-        }
 	}
 }
+
+
+let cancelOrderHandler = () => {
+	// Cancel an order
+
+    let cancel_buttons = document.querySelectorAll(".cancelBtn");
+
+    for (let button of cancel_buttons){
+     	button.addEventListener("click", () => {
+
+     		let url = `http://127.0.0.1:5000/api/v3/parcels/${button.dataset.id}/cancel`;
+
+			let token = localStorage.getItem("token");
+
+			fetch(url, {
+				method: 'PUT',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.json())
+			.then(response => {
+				if (response.message === "Success"){
+					alert("parcel order has been cancelled");
+					window.location.href = "#/admin";
+				} else {
+					console.log(response.message);
+				}
+			})
+			.catch(error => {
+				console.log(response.message);
+			});
+     	});
+    }
+}
+
+let editOrderHandler = () => {
+	// edit an order
+
+	let edit_buttons = document.querySelectorAll(".editBtn");
+	let modal = document.getElementById("editModal");
+	let span = document.getElementsByClassName("close")[1];
+
+	console.log(span);
+
+	for (let button of edit_buttons){
+		button.addEventListener("click", () => {
+			modal.style.display = "block";
+			alert(button.dataset.id);
+		});
+
+		span.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		window.addEventListener("click", (event) => {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		});
+	}
+}
+
 
 export default adminPage;
