@@ -12,13 +12,13 @@ let adminPage =  {
 		<div class="container">
 			<table id="parcels" class="orders">
 				<tr>
-					<th>Sender</th>
-					<th>Recipient</th>
-					<th><i class="fa fa-map-marker"></i> From</th>
-					<th><i class="fa fa-map-marker"></i> To</th>
-					<th><i class="fa fa-map-marker"></i> Current Location</th>
-					<th>Status</th>
-					<th><i class="fa fa-"></i> Actions</th>
+					<th><i class="fa fa-user"></i> Sender</th>
+					<th><i class="fa fa-user"></i> Recipient</th>
+					<th><i class="fa fa-map-marker-alt"></i> From</th>
+					<th><i class="fa fa-map-marker-alt"></i> To</th>
+					<th><i class="fa fa-map-marker-alt"></i> Current Location</th>
+					<th><i class="fa fa-heart"></i> Status</th>
+					<th><i class="fa fa-cog"></i> Actions</th>
 				</tr>
 			</table>
 		</div>
@@ -47,7 +47,7 @@ let adminPage =  {
 				</div>
 				<div class="form-group">
 					<label>Weight</label>
-					<input id="weight" type="text" placeholder="Parcel weight">
+					<input id="weight" type="number" placeholder="Parcel weight">
 				</div>
 				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
 			</form>
@@ -57,15 +57,11 @@ let adminPage =  {
 	  	<div class="modal-content">
     		<span class="close">&times;</span>
     		<form class="modal-form">
-				<h2>Change order status</h2>
+				<h2><i class="fa fa-map-marker-alt"></i> Update current location</h2>
 				<hr/>
 				<div class="form-group">
-					<label>Order Status</label>
-					<select id="sender" name="status">
-						<option value="Delivered">Delivered</option>
-						<option value="Not Delivered">No Delivered</option>
-						<option value="In transit">In transit</option>
-					</select>
+					<label>Location</label>
+					<input id="updateLocation" type="text" placeholder="New location">
 				</div>
 				<button id="editOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Save</button>
 			</form>
@@ -112,8 +108,8 @@ let adminPage =  {
 					<td>${parcel.present_location}</td>
 					<td>${parcel.status}</td>
 					<td>
-						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-cancel"></i> Cancel</button>
-						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-pencil"></i> Edit</button>
+						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-ban"></i> Cancel</button>
+						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-map-marker-alt"></i> Update location</button>
 					</td>
 				`
 				document.getElementById('parcels').appendChild(item);
@@ -175,8 +171,7 @@ let adminPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					window.location.href = "#/admin";
-					modal.style.display = "none";
+					window.location.reload();
 				} else {
 					console.log(response.message);
 				}
@@ -185,6 +180,13 @@ let adminPage =  {
 				console.log(response.message);
 			});
 		}
+
+		let orderBtn = document.getElementById("createOrderBtn");
+
+		orderBtn.onclick = function(event){
+			createOrder();
+		}
+
 	}
 }
 
@@ -212,9 +214,10 @@ let cancelOrderHandler = () => {
 			.then(response => {
 				if (response.message === "Success"){
 					alert("parcel order has been cancelled");
-					window.location.href = "#/admin";
+					window.location.reload();
 				} else {
-					console.log(response.message);
+					alert(response.message);
+					window.location.reload();
 				}
 			})
 			.catch(error => {
@@ -226,17 +229,14 @@ let cancelOrderHandler = () => {
 
 let editOrderHandler = () => {
 	// edit an order
-
 	let edit_buttons = document.querySelectorAll(".editBtn");
 	let modal = document.getElementById("editModal");
 	let span = document.getElementsByClassName("close")[1];
 
-	console.log(span);
-
 	for (let button of edit_buttons){
 		button.addEventListener("click", () => {
 			modal.style.display = "block";
-			alert(button.dataset.id);
+			updateOrderStatus(button.dataset.id);
 		});
 
 		span.addEventListener("click", () => {
@@ -249,6 +249,45 @@ let editOrderHandler = () => {
 			}
 		});
 	}
+}
+
+
+let updateOrderStatus = (id) => {
+	let edit_button = document.getElementById("editOrderBtn");
+
+	edit_button.addEventListener("click", () => {
+
+		let modal = document.getElementById("editModal");
+
+		let new_location = document.getElementById("updateLocation").value;
+
+		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
+
+		let token = localStorage.getItem("token");
+
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(new_location),
+			headers: {
+				'Authorization': 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(response => {
+			if (response.message === "Success"){
+				alert("Current location updated");
+				document.getElementById("updateLocation").value = ""
+				window.location.reload();
+			} else {
+				alert("no success");
+				window.location.reload();
+			}
+		})
+		.catch(error => {
+			alert(response.message);
+		});
+	});
 }
 
 
