@@ -18,7 +18,7 @@ let adminPage =  {
 					<th><i class="fa fa-map-marker-alt"></i> To</th>
 					<th><i class="fa fa-map-marker-alt"></i> Current Location</th>
 					<th><i class="fa fa-heart"></i> Status</th>
-					<th><i class="fa fa-cog"></i> Actions</th>
+					<th colspan="2"><i class="fa fa-cog"></i> Actions</th>
 				</tr>
 			</table>
 		</div>
@@ -66,6 +66,24 @@ let adminPage =  {
 				<button id="editOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Save</button>
 			</form>
   		</div>
+	</div> 
+	<div id="statusModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2><i class="fa fa-heart"></i> Update order status</h2>
+				<hr/>
+				<div class="form-group">
+					<select id="statusValue">
+						<option value="Not delivered">Not delivered</option>
+						<option value="In transit">In transit</option>
+						<option value="Delivered">Delivered</option>
+						<option value="Cancelled">Cancelled</option>
+					</select>
+				</div>
+				<button id="statusOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Update</button>
+			</form>
+  		</div>
 	</div> `},
 
 	after_rendering: async () => {
@@ -107,9 +125,10 @@ let adminPage =  {
 					<td>${parcel.destination}</td>
 					<td>${parcel.present_location}</td>
 					<td>${parcel.status}</td>
-					<td>
+					<td colspan="2">
 						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-ban"></i> Cancel</button>
 						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-map-marker-alt"></i> Update location</button>
+						<button data-id="${parcel.id}" class="statusBtn btn-green btn-sm"><i class="fa fa-heart"></i> Update Status</button>
 					</td>
 				`
 				document.getElementById('parcels').appendChild(item);
@@ -117,6 +136,7 @@ let adminPage =  {
 
 			cancelOrderHandler();
 			editOrderHandler();
+			statusOrderHandler();
 
 		}
 
@@ -236,6 +256,73 @@ let editOrderHandler = () => {
 	for (let button of edit_buttons){
 		button.addEventListener("click", () => {
 			modal.style.display = "block";
+			updateCurrentLocation(button.dataset.id);
+		});
+
+		span.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		window.addEventListener("click", (event) => {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		});
+	}
+}
+
+
+let updateCurrentLocation = (id) => {
+	let edit_button = document.getElementById("editOrderBtn");
+
+	edit_button.addEventListener("click", () => {
+
+		let modal = document.getElementById("editModal");
+
+		let new_location = document.getElementById("updateLocation").value;
+
+		let data = {
+			presentLocation: new_location
+		}
+
+		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
+
+		let token = localStorage.getItem("token");
+
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(data),
+			headers: {
+				'Authorization': 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(response => {
+			if (response.message === "Success"){
+				alert("Current location updated");
+				document.getElementById("updateLocation").value = ""
+				window.location.reload();
+			} else {
+				alert(response.message);
+				window.location.reload();
+			}
+		})
+		.catch(error => {
+			alert(response.message);
+		});
+	});
+}
+
+let statusOrderHandler = () => {
+	// edit an order
+	let status_buttons = document.querySelectorAll(".statusBtn");
+	let modal = document.getElementById("statusModal");
+	let span = document.getElementsByClassName("close")[2];
+
+	for (let button of status_buttons){
+		button.addEventListener("click", () => {
+			modal.style.display = "block";
 			updateOrderStatus(button.dataset.id);
 		});
 
@@ -253,13 +340,17 @@ let editOrderHandler = () => {
 
 
 let updateOrderStatus = (id) => {
-	let edit_button = document.getElementById("editOrderBtn");
+	let status_button = document.getElementById("statusOrderBtn");
 
-	edit_button.addEventListener("click", () => {
+	status_button.addEventListener("click", () => {
 
-		let modal = document.getElementById("editModal");
+		let modal = document.getElementById("statusModal");
 
-		let new_location = document.getElementById("updateLocation").value;
+		let new_status = document.getElementById("statusValue").value;
+
+		let data = {
+			status: new_status
+		}
 
 		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
 
@@ -267,7 +358,7 @@ let updateOrderStatus = (id) => {
 
 		fetch(url, {
 			method: 'PUT',
-			body: JSON.stringify(new_location),
+			body: JSON.stringify(data),
 			headers: {
 				'Authorization': 'Bearer ' + token,
 				'Content-Type': 'application/json'
@@ -276,11 +367,11 @@ let updateOrderStatus = (id) => {
 		.then(res => res.json())
 		.then(response => {
 			if (response.message === "Success"){
-				alert("Current location updated");
-				document.getElementById("updateLocation").value = ""
+				alert("Order status updated");
+				document.getElementById("statusValue").value = ""
 				window.location.reload();
 			} else {
-				alert("no success");
+				alert(response.message);
 				window.location.reload();
 			}
 		})
