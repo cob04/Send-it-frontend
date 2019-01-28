@@ -300,6 +300,31 @@ hr {
 .options {
 	box-sizing: border-box;
 }
+/** table **/
+.orders {
+	border-collapse: collapse;
+	width: 100%;
+}
+.orders td,
+.orders th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+.orders tr:nth-child(even){
+	background-color: #f1f1f1;
+}
+.orders tr:hover {
+	background-color: #33CC99;
+	color: #FFF;
+}
+.orders th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #339966;
+	border: 1px solid #33CC99;
+	color: white;
+}
 /** footer **/
 #footer {
 	background-color: #66CC99;

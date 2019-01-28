@@ -9,7 +9,18 @@ let adminPage =  {
 		</div>
 	</section>
 	<section class="main-alt">
-		<div id="parcels" class="container">
+		<div class="container">
+			<table id="parcels" class="orders">
+				<tr>
+					<th>Sender</th>
+					<th>Recipient</th>
+					<th><i class="fa fa-map-marker"></i> From</th>
+					<th><i class="fa fa-map-marker"></i> To</th>
+					<th><i class="fa fa-map-marker"></i> Current Location</th>
+					<th>Status</th>
+					<th><i class="fa fa-"></i> Actions</th>
+				</tr>
+			</table>
 		</div>
 	</section>
 	<div id="orderModal" class="modal">
@@ -92,22 +103,20 @@ let adminPage =  {
 
 		let parcelOrders = (parcel_orders) => {
 			parcel_orders.forEach(parcel => {
-				let items = document.createElement("div");
-				items.innerHTML = `
-					<div class="thumbnail">
-						<p>
-							<span>ID:</span> ${parcel.id} <a href="/#/parcels/${parcel.id}">
-							<button class="btn-blue btn-sm">More details</button></a>
-						</p>
-						<p><span>Sender:</span> ${parcel.sender}</p>
-						<p><span>Recipient:</span> ${parcel.recipient}</p>
-						<p><span>From:</span> ${parcel.pickup}</p>
-						<p><span>To:</span> ${parcel.destination}</p>
-						<p><span>Status:</span> ${parcel.status}</p>
+				let item = document.createElement("tr");
+				item.innerHTML = `
+					<td>${parcel.sender}</td>
+					<td>${parcel.recipient}</td>
+					<td>${parcel.pickup}</td>
+					<td>${parcel.destination}</td>
+					<td>${parcel.present_location}</td>
+					<td>${parcel.status}</td>
+					<td>
 						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-cancel"></i> Cancel</button>
 						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-pencil"></i> Edit</button>
-					</div>`
-				document.getElementById('parcels').appendChild(items);
+					</td>
+				`
+				document.getElementById('parcels').appendChild(item);
 			});
 
 			cancelOrderHandler();
