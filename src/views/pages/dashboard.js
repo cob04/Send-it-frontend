@@ -13,7 +13,7 @@ let dashboardPage =  {
 		<div class="container">
 			<table id="parcels" class="orders">
 				<tr>
-					<th><i class="fa fa-info"></i> ID</th>
+					<th>ID</th>
 					<th><i class="fa fa-user"></i> Sender</th>
 					<th><i class="fa fa-user"></i> Recipient</th>
 					<th><i class="fa fa-map-marker-alt"></i> From</th>
@@ -95,7 +95,7 @@ let dashboardPage =  {
 				}
 			})
 			.catch(error => {
-				alert(response.message);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -179,7 +179,7 @@ let dashboardPage =  {
 				}
 			})
 			.catch(error => {
-				console.log(response.message);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -221,7 +221,7 @@ let cancelOrderHandler = () => {
 				}
 			})
 			.catch(error => {
-				alert(response.message);
+				alert("Oops!, we have encountered an error");
 			});
      	});
     }
@@ -288,7 +288,7 @@ let changeDestination = (id) => {
 			}
 		})
 		.catch(error => {
-			alert(response.message);
+			alert("Oops!, we have encountered an error");
 		});
 	});
 }

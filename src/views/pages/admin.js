@@ -111,7 +111,7 @@ let adminPage =  {
 				}
 			})
 			.catch(error => {
-				console.log(response);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -197,7 +197,7 @@ let adminPage =  {
 				}
 			})
 			.catch(error => {
-				console.log(response.message);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -241,7 +241,7 @@ let cancelOrderHandler = () => {
 				}
 			})
 			.catch(error => {
-				console.log(response.message);
+				alert("Oops!, we have encountered an error");
 			});
      	});
     }
@@ -282,7 +282,7 @@ let updateCurrentLocation = (id) => {
 		let new_location = document.getElementById("updateLocation").value;
 
 		let data = {
-			presentLocation: new_location
+			present_location: new_location
 		}
 
 		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
@@ -309,7 +309,7 @@ let updateCurrentLocation = (id) => {
 			}
 		})
 		.catch(error => {
-			alert(response.message);
+			alert("Oops!, we have encountered an error");
 		});
 	});
 }
@@ -352,7 +352,7 @@ let updateOrderStatus = (id) => {
 			status: new_status
 		}
 
-		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
+		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/status`;
 
 		let token = localStorage.getItem("token");
 
@@ -371,12 +371,12 @@ let updateOrderStatus = (id) => {
 				document.getElementById("statusValue").value = ""
 				window.location.reload();
 			} else {
-				alert(response.message);
+				alert(response.message.status);
 				window.location.reload();
 			}
 		})
 		.catch(error => {
-			alert(response.message);
+			alert("Oops!, we have encountered an error");
 		});
 	});
 }
