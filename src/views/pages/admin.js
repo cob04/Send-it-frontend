@@ -4,7 +4,7 @@ let adminPage =  {
 	<section class="main">
 		<div class="container">
 			<h1>Welcome to the Admin Dashboard.</h1>
-			<p>From here you can create new orders or edit existing ones</p>
+			<p>From here you can update order status and present location</p>
 			<button id="orderModalBtn" class="btn-green">Create new Order</button>
 		</div>
 	</section>

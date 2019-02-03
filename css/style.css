@@ -376,7 +376,7 @@ hr {
 /** mobile **/
 @media(max-width:600px){
 	.container {
-		width: 100%;
+		width: 94%;
 	}
 	#main-nav li {
 		line-height: 1.8em;
@@ -429,5 +429,8 @@ hr {
 	}
 	.options {
 		float: none;
+	}
+	.modal-content {
+		width: 80%;
 	}
 }
