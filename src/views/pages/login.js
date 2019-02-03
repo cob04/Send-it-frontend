@@ -3,7 +3,7 @@ let loginPage =  {
 		return `
 	<section class="main">
 		<div class="container">
-			<form class="account-form">
+			<form id="login-form" class="account-form">
 			<h2>Login to Send-It</h2>
 			<hr/>
 				<div class="form-group">
@@ -45,7 +45,11 @@ let loginPage =  {
 				if (response.message === "Success"){
 					alert("Youre logged in " + response.user.name + "!!!");
 					localStorage.setItem("token", response.access_token);
-					window.location.href = "#/dashboard";
+					if (response.user.role === 'Administrator') {
+						window.location.href = "#/admin";
+					} else {
+						window.location.href ="#/dashboard";
+					}
 				} else {
 					alert(response.message);
 				}
