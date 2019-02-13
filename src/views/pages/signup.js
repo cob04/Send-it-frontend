@@ -1,3 +1,6 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1" 
+
 let signupPage = {
 	render: async () => {
 		return `<section class="main">
@@ -43,7 +46,7 @@ let signupPage = {
 				password2: password2
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/auth/signup";
+			const url = prod_domain + "/api/v3/auth/signup";
 
 			fetch(url, {
 				method: 'POST',

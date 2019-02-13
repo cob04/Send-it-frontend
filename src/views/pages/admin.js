@@ -1,3 +1,6 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1" 
+
 let adminPage =  {
 	render: async () => {
 		return `
@@ -89,7 +92,7 @@ let adminPage =  {
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "http://127.0.0.1:5000/api/v3/parcels";
+			let url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -106,8 +109,9 @@ let adminPage =  {
 					let parcel_orders = response.parcel_orders;
 					parcelOrders(parcel_orders);
 				} else {
-					console.log(response);
-					alert(response.msg);
+					if (response.msg == "Token has expired"){
+						window.location.href = "#/login";
+					}
 				}
 			})
 			.catch(error => {
@@ -176,7 +180,7 @@ let adminPage =  {
 				weight: weight
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/parcels";
+			const url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 

@@ -1,3 +1,6 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1" 
+
 let dashboardPage =  {
 	render: async () => {
 		return `
@@ -74,7 +77,7 @@ let dashboardPage =  {
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "http://127.0.0.1:5000/api/v3/parcels";
+			let url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -91,7 +94,9 @@ let dashboardPage =  {
 					let parcel_orders = response.parcel_orders;
 					parcelOrders(parcel_orders);
 				} else {
-					alert(response.message);
+					if (response.msg == "Token has expired"){
+						window.location.href = "#/login";
+					}
 				}
 			})
 			.catch(error => {
@@ -157,7 +162,7 @@ let dashboardPage =  {
 				weight: weight
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/parcels";
+			const url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -199,7 +204,7 @@ let cancelOrderHandler = () => {
     for (let button of cancel_buttons){
      	button.addEventListener("click", () => {
 
-     		let url = `http://127.0.0.1:5000/api/v3/parcels/${button.dataset.id}/cancel`;
+     		let url = prod_domain + `/api/v3/parcels/${button.dataset.id}/cancel`;
 
 			let token = localStorage.getItem("token");
 
@@ -264,7 +269,7 @@ let changeDestination = (id) => {
 			destination: new_destination
 		}
 
-		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/destination`;
+		let url = prod_domain + `/api/v3/parcels/${id}/destination`;
 
 		let token = localStorage.getItem("token");
 

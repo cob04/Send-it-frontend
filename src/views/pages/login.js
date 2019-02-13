@@ -1,3 +1,6 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1"
+
 let loginPage =  {
 	render: async () => {
 		return `
@@ -31,7 +34,7 @@ let loginPage =  {
 				password: password,
 			}
 
-			const url = "http://127.0.0.1:5000/api/v3/auth/login";
+			const url = prod_domain + "/api/v3/auth/login";
 
 			fetch(url, {
 				method: 'POST',
@@ -45,6 +48,7 @@ let loginPage =  {
 				if (response.message === "Success"){
 					alert("Youre logged in " + response.user.name + "!!!");
 					localStorage.setItem("token", response.access_token);
+					localStorage.setItem("role", response.user.role);
 					if (response.user.role === 'Administrator') {
 						window.location.href = "#/admin";
 					} else {
