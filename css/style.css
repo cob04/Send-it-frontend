@@ -10,7 +10,7 @@ hr {
 	border-top: #555;
 }
 .container {
-	width: 80%;
+	width: 90%;
 	margin: auto;
 	overflow: hidden;
 }
@@ -300,6 +300,31 @@ hr {
 .options {
 	box-sizing: border-box;
 }
+/** table **/
+.orders {
+	border-collapse: collapse;
+	width: 100%;
+}
+.orders td,
+.orders th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+.orders tr:nth-child(even){
+	background-color: #f1f1f1;
+}
+.orders tr:hover {
+	background-color: #33CC99;
+	color: #FFF;
+}
+.orders th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #339966;
+	border: 1px solid #33CC99;
+	color: white;
+}
 /** footer **/
 #footer {
 	background-color: #66CC99;
@@ -351,7 +376,7 @@ hr {
 /** mobile **/
 @media(max-width:600px){
 	.container {
-		width: 100%;
+		width: 94%;
 	}
 	#main-nav li {
 		line-height: 1.8em;
@@ -377,16 +402,6 @@ hr {
 	#intro .content h3 {
 		font-size: 1em;
 	}
-	#intro .order-form {
-		width: 80%;
-		margin: auto;
-		opacity: 0.7;
-	}
-	#intro .order-form .form-group{
-		display: block;
-		padding-bottom: 10px;
-		margin: auto;
-	}
 	#marketing .item {
 		float: none;
 		width: 100%;
@@ -404,5 +419,8 @@ hr {
 	}
 	.options {
 		float: none;
+	}
+	.modal-content {
+		width: 80%;
 	}
 }

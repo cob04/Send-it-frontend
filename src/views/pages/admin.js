@@ -1,15 +1,29 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1" 
+
 let adminPage =  {
 	render: async () => {
 		return `
 	<section class="main">
 		<div class="container">
 			<h1>Welcome to the Admin Dashboard.</h1>
-			<p>From here you can create new orders or edit existing ones</p>
+			<p>From here you can update order status and present location</p>
 			<button id="orderModalBtn" class="btn-green">Create new Order</button>
 		</div>
 	</section>
 	<section class="main-alt">
-		<div id="parcels" class="container">
+		<div class="container">
+			<table id="parcels" class="orders">
+				<tr>
+					<th><i class="fa fa-user"></i> Sender</th>
+					<th><i class="fa fa-user"></i> Recipient</th>
+					<th><i class="fa fa-map-marker-alt"></i> From</th>
+					<th><i class="fa fa-map-marker-alt"></i> To</th>
+					<th><i class="fa fa-map-marker-alt"></i> Current Location</th>
+					<th><i class="fa fa-heart"></i> Status</th>
+					<th colspan="2"><i class="fa fa-cog"></i> Actions</th>
+				</tr>
+			</table>
 		</div>
 	</section>
 	<div id="orderModal" class="modal">
@@ -36,17 +50,49 @@ let adminPage =  {
 				</div>
 				<div class="form-group">
 					<label>Weight</label>
-					<input id="weight" type="text" placeholder="Parcel weight">
+					<input id="weight" type="number" placeholder="Parcel weight">
 				</div>
 				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
 			</form>
-  		</div>163447563
+  		</div>
+  	</div>
+  	<div id="editModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2><i class="fa fa-map-marker-alt"></i> Update current location</h2>
+				<hr/>
+				<div class="form-group">
+					<label>Location</label>
+					<input id="updateLocation" type="text" placeholder="New location">
+				</div>
+				<button id="editOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Save</button>
+			</form>
+  		</div>
+	</div> 
+	<div id="statusModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2><i class="fa fa-heart"></i> Update order status</h2>
+				<hr/>
+				<div class="form-group">
+					<select id="statusValue">
+						<option value="Not delivered">Not delivered</option>
+						<option value="In transit">In transit</option>
+						<option value="Delivered">Delivered</option>
+						<option value="Cancelled">Cancelled</option>
+					</select>
+				</div>
+				<button id="statusOrderBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Update</button>
+			</form>
+  		</div>
 	</div> `},
 
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			let url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -63,39 +109,44 @@ let adminPage =  {
 					let parcel_orders = response.parcel_orders;
 					parcelOrders(parcel_orders);
 				} else {
-					console.log(response);
-					alert(response.msg);
+					if (response.msg == "Token has expired"){
+						window.location.href = "#/login";
+					}
 				}
 			})
 			.catch(error => {
-				console.log(response);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
 		let parcelOrders = (parcel_orders) => {
 			parcel_orders.forEach(parcel => {
-				console.log("running");
-				let items = document.createElement("div");
-				items.innerHTML = `
-					<div class="thumbnail">
-						<p>
-							<span>ID:</span> ${parcel.id} <a href="/#/parcels/${parcel.id}">
-							<button class="btn-blue btn-sm">More details</button></a>
-						</p>
-						<p><span>Sender:</span> ${parcel.sender}</p>
-						<p><span>Recipient:</span> ${parcel.recipient}</p>
-						<p><span>From:</span> ${parcel.pickup}</p>
-						<p><span>To:</span> ${parcel.destination}</p>
-						<p><span>Status:</span> ${parcel.status}</p>
-						<button id=""class="btn-action btn-sm">Cancel</button>
-						<button class="btn-green btn-sm">Alter destination</button>
-					</div>`
-				document.getElementById('parcels').appendChild(items);
+				let item = document.createElement("tr");
+				item.innerHTML = `
+					<td>${parcel.sender}</td>
+					<td>${parcel.recipient}</td>
+					<td>${parcel.pickup}</td>
+					<td>${parcel.destination}</td>
+					<td>${parcel.present_location}</td>
+					<td>${parcel.status}</td>
+					<td colspan="2">
+						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-ban"></i> Cancel</button>
+						<button data-id="${parcel.id}" class="editBtn btn-green btn-sm"><i class="fa fa-map-marker-alt"></i> Update location</button>
+						<button data-id="${parcel.id}" class="statusBtn btn-green btn-sm"><i class="fa fa-heart"></i> Update Status</button>
+					</td>
+				`
+				document.getElementById('parcels').appendChild(item);
 			});
+
+			cancelOrderHandler();
+			editOrderHandler();
+			statusOrderHandler();
+
 		}
 
 		fetchOrders();
 
+		// create order modal
 		let modal = document.getElementById('orderModal');
 		let btn = document.getElementById("orderModalBtn");
 		let span = document.getElementsByClassName("close")[0];
@@ -129,7 +180,7 @@ let adminPage =  {
 				weight: weight
 			}
 
-			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			const url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -144,14 +195,13 @@ let adminPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					window.location.href = "#/admin";
-					modal.style.display = "none";
+					window.location.reload();
 				} else {
 					console.log(response.message);
 				}
 			})
 			.catch(error => {
-				console.log(response.message);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -160,7 +210,180 @@ let adminPage =  {
 		orderBtn.onclick = function(event){
 			createOrder();
 		}
+
 	}
 }
+
+
+let cancelOrderHandler = () => {
+	// Cancel an order
+
+    let cancel_buttons = document.querySelectorAll(".cancelBtn");
+
+    for (let button of cancel_buttons){
+     	button.addEventListener("click", () => {
+
+     		let url = `http://127.0.0.1:5000/api/v3/parcels/${button.dataset.id}/cancel`;
+
+			let token = localStorage.getItem("token");
+
+			fetch(url, {
+				method: 'PUT',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.json())
+			.then(response => {
+				if (response.message === "Success"){
+					alert("parcel order has been cancelled");
+					window.location.reload();
+				} else {
+					alert(response.message);
+					window.location.reload();
+				}
+			})
+			.catch(error => {
+				alert("Oops!, we have encountered an error");
+			});
+     	});
+    }
+}
+
+let editOrderHandler = () => {
+	// edit an order
+	let edit_buttons = document.querySelectorAll(".editBtn");
+	let modal = document.getElementById("editModal");
+	let span = document.getElementsByClassName("close")[1];
+
+	for (let button of edit_buttons){
+		button.addEventListener("click", () => {
+			modal.style.display = "block";
+			updateCurrentLocation(button.dataset.id);
+		});
+
+		span.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		window.addEventListener("click", (event) => {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		});
+	}
+}
+
+
+let updateCurrentLocation = (id) => {
+	let edit_button = document.getElementById("editOrderBtn");
+
+	edit_button.addEventListener("click", () => {
+
+		let modal = document.getElementById("editModal");
+
+		let new_location = document.getElementById("updateLocation").value;
+
+		let data = {
+			present_location: new_location
+		}
+
+		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/presentLocation`;
+
+		let token = localStorage.getItem("token");
+
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(data),
+			headers: {
+				'Authorization': 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(response => {
+			if (response.message === "Success"){
+				alert("Current location updated");
+				document.getElementById("updateLocation").value = ""
+				window.location.reload();
+			} else {
+				alert(response.message);
+				window.location.reload();
+			}
+		})
+		.catch(error => {
+			alert("Oops!, we have encountered an error");
+		});
+	});
+}
+
+let statusOrderHandler = () => {
+	// edit an order
+	let status_buttons = document.querySelectorAll(".statusBtn");
+	let modal = document.getElementById("statusModal");
+	let span = document.getElementsByClassName("close")[2];
+
+	for (let button of status_buttons){
+		button.addEventListener("click", () => {
+			modal.style.display = "block";
+			updateOrderStatus(button.dataset.id);
+		});
+
+		span.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		window.addEventListener("click", (event) => {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		});
+	}
+}
+
+
+let updateOrderStatus = (id) => {
+	let status_button = document.getElementById("statusOrderBtn");
+
+	status_button.addEventListener("click", () => {
+
+		let modal = document.getElementById("statusModal");
+
+		let new_status = document.getElementById("statusValue").value;
+
+		let data = {
+			status: new_status
+		}
+
+		let url = `http://127.0.0.1:5000/api/v3/parcels/${id}/status`;
+
+		let token = localStorage.getItem("token");
+
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(data),
+			headers: {
+				'Authorization': 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(response => {
+			if (response.message === "Success"){
+				alert("Order status updated");
+				document.getElementById("statusValue").value = ""
+				window.location.reload();
+			} else {
+				alert(response.message.status);
+				window.location.reload();
+			}
+		})
+		.catch(error => {
+			alert("Oops!, we have encountered an error");
+		});
+	});
+}
+
 
 export default adminPage;

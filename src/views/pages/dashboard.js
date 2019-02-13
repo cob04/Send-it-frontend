@@ -1,3 +1,6 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1" 
+
 let dashboardPage =  {
 	render: async () => {
 		return `
@@ -10,7 +13,19 @@ let dashboardPage =  {
 
 	</section>
 	<section class="main-alt">
-		<div id="parcels" class="container">
+		<div class="container">
+			<table id="parcels" class="orders">
+				<tr>
+					<th>ID</th>
+					<th><i class="fa fa-user"></i> Sender</th>
+					<th><i class="fa fa-user"></i> Recipient</th>
+					<th><i class="fa fa-map-marker-alt"></i> From</th>
+					<th><i class="fa fa-map-marker-alt"></i> To</th>
+					<th><i class="fa fa-map-marker-alt"></i> Current Location</th>
+					<th><i class="fa fa-heart"></i> Status</th>
+					<th><i class="fa fa-cog"></i> Actions</th>
+				</tr>
+			</table>
 		</div>
 	</section>
 	<div id="orderModal" class="modal">
@@ -37,17 +52,32 @@ let dashboardPage =  {
 				</div>
 				<div class="form-group">
 					<label>Weight</label>
-					<input id="weight" type="text" placeholder="Parcel weight">
+					<input id="weight" type="number" placeholder="Parcel weight">
 				</div>
 				<button id="createOrderBtn" type="submit" class="btn-action">Create Order</button>
 			</form>
   		</div>
-	</div> `},
+	</div> 
+	<div id="destinationModal" class="modal">
+	  	<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<form class="modal-form">
+				<h2><i class="fa fa-map-marker-alt"></i> Change Destination</h2>
+				<hr/>
+				<div class="form-group">
+					<label>Destination</label>
+					<input id="editDestination" type="text" placeholder="New destination">
+				</div>
+				<button id="destinationBtn" type="submit" class="btn-action btn-sm"><i class="fa fa-save"></i> Save</button>
+			</form>
+  		</div>
+	</div> 
+	`},
 
 	after_rendering: async () => {
 
 		const fetchOrders = () => {
-			let url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			let url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -61,34 +91,40 @@ let dashboardPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					console.log(response);
 					let parcel_orders = response.parcel_orders;
 					parcelOrders(parcel_orders);
 				} else {
-					console.log(response);
-					alert(response.msg);
+					if (response.msg == "Token has expired"){
+						window.location.href = "#/login";
+					}
 				}
 			})
 			.catch(error => {
-				console.log(response);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
 		let parcelOrders = (parcel_orders) => {
 			parcel_orders.forEach(parcel => {
-				console.log("running");
-				let items = document.createElement("div");
-				items.innerHTML = `
-					<div class="thumbnail">
-						<p><span>ID:</span> ${parcel.id} <button class="btn-blue btn-sm">More details</button></p>
-						<p><span>Sender:</span> ${parcel.sender}</p>
-						<p><span>Recipient:</span> ${parcel.recipient}</p>
-						<p><span>From:</span> ${parcel.pickup}</p>
-						<p><span>To:</span> ${parcel.destination}</p>
-						<p><span>Status:</span> ${parcel.status}</p>
-					</div>`
-				document.getElementById('parcels').appendChild(items);
+				let item = document.createElement("tr");
+				item.innerHTML = `
+					<td>${parcel.id}</td>
+					<td>${parcel.sender}</td>
+					<td>${parcel.recipient}</td>
+					<td>${parcel.pickup}</td>
+					<td>${parcel.destination}</td>
+					<td>${parcel.present_location}</td>
+					<td>${parcel.status}</td>
+					<td>
+						<button data-id="${parcel.id}" class="cancelBtn btn-action btn-sm"><i class="fa fa-ban"></i> Cancel</button>
+						<button data-id="${parcel.id}" class="changeDestinationBtn btn-green btn-sm"><i class="fa fa-map-marker-alt"></i> Change Destination</button>
+					</td>
+				`
+				document.getElementById('parcels').appendChild(item);
 			});
+
+			cancelOrderHandler();
+			editDestinationHandler();
 		}
 
 		fetchOrders();
@@ -126,7 +162,7 @@ let dashboardPage =  {
 				weight: weight
 			}
 
-			const url = "https://gin-bob.herokuapp.com/api/v3/parcels";
+			const url = prod_domain + "/api/v3/parcels";
 
 			let token = localStorage.getItem("token");
 
@@ -141,14 +177,14 @@ let dashboardPage =  {
 			.then(res => res.json())
 			.then(response => {
 				if (response.message === "Success"){
-					window.location.href = "#/dashboard";
+					window.location.reload();
 					modal.style.display = "none";
 				} else {
 					console.log(response.message);
 				}
 			})
 			.catch(error => {
-				console.log(response.message);
+				alert("Oops!, we have encountered an error");
 			});
 		}
 
@@ -159,5 +195,109 @@ let dashboardPage =  {
 		}
 	}
 }
+
+let cancelOrderHandler = () => {
+	// Cancel an order
+
+    let cancel_buttons = document.querySelectorAll(".cancelBtn");
+
+    for (let button of cancel_buttons){
+     	button.addEventListener("click", () => {
+
+     		let url = prod_domain + `/api/v3/parcels/${button.dataset.id}/cancel`;
+
+			let token = localStorage.getItem("token");
+
+			fetch(url, {
+				method: 'PUT',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				}
+			})
+			.then(res => res.json())
+			.then(response => {
+				if (response.message === "Success"){
+					alert("parcel order has been cancelled");
+					window.location.reload();
+				} else {
+					alert(response.message);
+					window.location.reload();
+				}
+			})
+			.catch(error => {
+				alert("Oops!, we have encountered an error");
+			});
+     	});
+    }
+}
+
+let editDestinationHandler = () => {
+	// edit an order
+	let edit_buttons = document.querySelectorAll(".changeDestinationBtn");
+	let modal = document.getElementById("destinationModal");
+	let span = document.getElementsByClassName("close")[1];
+
+	for (let button of edit_buttons){
+		button.addEventListener("click", () => {
+			modal.style.display = "block";
+			changeDestination(button.dataset.id);
+		});
+
+		span.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		window.addEventListener("click", (event) => {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		});
+	}
+}
+
+
+let changeDestination = (id) => {
+	let destination_button = document.getElementById("destinationBtn");
+
+	destination_button.addEventListener("click", () => {
+		let modal = document.getElementById("destinationModal");
+
+		let new_destination = document.getElementById("editDestination").value;
+
+		let data = {
+			destination: new_destination
+		}
+
+		let url = prod_domain + `/api/v3/parcels/${id}/destination`;
+
+		let token = localStorage.getItem("token");
+
+		fetch(url, {
+			method: 'PUT',
+			body: JSON.stringify(data),
+			headers: {
+				'Authorization': 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(response => {
+			if (response.message === "Success"){
+				alert("order destination changed");
+				document.getElementById("editDestination").value = ""
+				window.location.reload();
+			} else {
+				alert(response.message);
+				window.location.reload();
+			}
+		})
+		.catch(error => {
+			alert("Oops!, we have encountered an error");
+		});
+	});
+}
+
+
 
 export default dashboardPage;

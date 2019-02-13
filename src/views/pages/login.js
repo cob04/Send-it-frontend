@@ -1,9 +1,12 @@
+const prod_domain = "https://gin-bob.herokuapp.com"
+const local_domain = "http://127.0.0.1"
+
 let loginPage =  {
 	render: async () => {
 		return `
 	<section class="main">
 		<div class="container">
-			<form class="account-form">
+			<form id="login-form" class="account-form">
 			<h2>Login to Send-It</h2>
 			<hr/>
 				<div class="form-group">
@@ -31,7 +34,7 @@ let loginPage =  {
 				password: password,
 			}
 
-			const url = "https://gin-bob.herokuapp.com/api/v3/auth/login";
+			const url = prod_domain + "/api/v3/auth/login";
 
 			fetch(url, {
 				method: 'POST',
@@ -45,7 +48,12 @@ let loginPage =  {
 				if (response.message === "Success"){
 					alert("Youre logged in " + response.user.name + "!!!");
 					localStorage.setItem("token", response.access_token);
-					window.location.href = "#/dashboard";
+					localStorage.setItem("role", response.user.role);
+					if (response.user.role === 'Administrator') {
+						window.location.href = "#/admin";
+					} else {
+						window.location.href ="#/dashboard";
+					}
 				} else {
 					alert(response.message);
 				}
